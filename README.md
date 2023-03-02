@@ -1,1 +1,3 @@
 # GraphicEcuations
+
+Entrypoint: main.py
