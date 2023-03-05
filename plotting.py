@@ -1,13 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 
 #import modules
 from functions import *
 
 
 #Setting the plotter window style
-def setPlotStyle(xmin, xmax, ymin, ymax, tickrate):
-    fig, ax = plt.subplots(figsize=(7, 7))
+def setPlotStyle(xmin, xmax, ymin, ymax):
+    fig, ax = plt.subplots()
+    fig.set_size_inches(15, 15)
     fig.patch.set_facecolor('#FFFFFF')
     
     #Set axes limits and aspect ratio
@@ -20,20 +22,15 @@ def setPlotStyle(xmin, xmax, ymin, ymax, tickrate):
     ax.spines['top'].set_color('none')
 
     #Set axes ticks style
-    ax.set_xlabel('$x$', size=14, x=1.02, labelpad=-24) 
+    ax.set_xlabel('$t$', size=14, x=1.02, labelpad=-24) 
     ax.set_ylabel('$y$', size=14, y=1, labelpad=-30, rotation=0)
-    plt.text(0.499, 0.499, r"$0$", ha='right', va='top', 
-            transform=ax.transAxes,
-            horizontalalignment='center',
-            fontsize=12)
 
     #Set axes ticks
-    x_ticks = np.arange(xmin, xmax+1, tickrate)
-    y_ticks = np.arange(ymin, ymax+1, tickrate)
-    ax.set_xticks(x_ticks[x_ticks != 0])
-    ax.set_yticks(y_ticks[y_ticks != 0])
-    ax.set_xticks(np.arange(xmin, xmax+1), minor=True)
-    ax.set_yticks(np.arange(ymin, ymax+1), minor=True)
+    ax.xaxis.set_major_locator(ticker.MaxNLocator(16))
+    ax.yaxis.set_major_locator(ticker.MaxNLocator(16))
+    yticks = ax.get_yticks()
+    ax.set_yticks([tick for tick in yticks if tick != 0])
+    ax.tick_params(axis='x', labelrotation=-45)
 
     #Create a grid (decoration)
     ax.grid(which='both', color='#a5a5a5', linestyle='-', linewidth=1, alpha=0.5)
