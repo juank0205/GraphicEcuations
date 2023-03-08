@@ -24,7 +24,7 @@ def plotStep(x, y, xi, yi):
 
 # Evals a string with a list of values to be used as x inside the function
 def evalString(string: str, xValues: list) -> list:
-    return [float(string)]*len(xValues) if string.isdigit() else eval(str(string), {'x': xValues, 't': xValues, 'math': math})
+    return [float(string)]*len(xValues) if string.isdigit() else eval(str(string), {'x': xValues, 't': xValues, 'y': xValues, 'math': math})
 
 
 # Plot a function
@@ -49,7 +49,6 @@ def plotFunction(xmin, xmax, ymin, ymax, npoints):
 # Plot a function using eulers method
 def plotEuler(xmin, xmax, ymin, ymax):
     # Get the function from the user and the initial values
-
     try:
         string = input("Enter a function dy/dt = ")
         xo = float(input("Enter the initial value of x: "))
@@ -62,6 +61,14 @@ def plotEuler(xmin, xmax, ymin, ymax):
         print("Invalid data\n")
         return
 
+    if 'x' not in string and 't' not in string:
+        eulerY(xo, yo, xRange, step, string, xmin)
+    else:
+        eulerX(xo, yo, xRange, step, string, xmin)
+
+    show()
+
+def eulerX(xo, yo, xRange, step, string, xmin):
     # Calculate the y values using eulers method and plotting the line segments
     yi = yo
     try:
@@ -85,4 +92,26 @@ def plotEuler(xmin, xmax, ymin, ymax):
         print("Invalid function")
         return
 
-    show()
+def eulerY(xo, yo, xRange, step, string, xmin):
+    # Calculate the y values using eulers method and plotting the line segments
+    yi = yo
+    try:
+        for i in range(len(xRange)-1):
+            m = evalString(string, yi)
+            plotStep(xRange[i], yi, xRange[i+1], yi+(m*step))
+            yi += m*step
+    except:
+        print("Invalid function\n")
+        return
+
+    # Same process but to the left of the initial point
+    xRange = np.arange(xo, xmin, step*(-1))
+    yi = yo
+    try:
+        for i in range(len(xRange)-1):
+            m = evalString(string, yi)
+            plotStep(xRange[i], yi, xRange[i+1], yi-(m*step))
+            yi -= m*step
+    except:
+        print("Invalid function")
+        return
